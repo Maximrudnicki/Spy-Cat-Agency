@@ -2,15 +2,10 @@
 
 ## How to start
 
-In order to start the app you need to create file with name of test.env with following variables:
-POSTGRES_HOST=
-POSTGRES_PORT=
-POSTGRES_DB=
-POSTGRES_USER=
-POSTGRES_PASSWORD=
-PORT=8000
+##### In order to start the app you need to enter the following command: docker-compose up -d
 
+##### Once containers are up, just visit localhos:8000 or check the postman here: https://www.postman.com/navigation-engineer-62741940/workspace/rudnytskyi-test/collection/25383927-2ea6fdcf-a203-4ca9-b2c9-f09eb1bbb83b?action=share&creator=25383927
 
+##### If you need to stop the app, just enter docker-compose down
 
-docker build -t test_rudnytskyi:latest .
-docker run --env-file test.env -p 8000:8000 test_rudnytskyi:latest
+##### I used Gin and GORM to build the app.
