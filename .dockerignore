@@ -1,0 +1,11 @@
+vendor/
+
+git/
+
+bin/
+
+.dockerignore
+
+.gitignore
+
+logs.txt

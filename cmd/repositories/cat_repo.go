@@ -25,7 +25,7 @@ type CatRepositoryImpl struct {
 // Delete implements CatRepository.
 func (c *CatRepositoryImpl) Delete(catId uint32) error {
 	var cat models.Cat
-	result := c.Db.Where("id = ?", catId).Delete(&cat)
+	result := c.Db.Where("cat_id = ?", catId).Delete(&cat)
 	if result.Error != nil {
 		log.Printf("Repo: cannot delete cat")
 		return errors.New("cannot delete cat")
@@ -36,7 +36,7 @@ func (c *CatRepositoryImpl) Delete(catId uint32) error {
 // Get implements CatRepository.
 func (c *CatRepositoryImpl) Get(catId uint32) (models.Cat, error) {
 	var cat models.Cat
-	result := c.Db.Where("id = ?", catId).Find(&cat)
+	result := c.Db.Where("cat_id = ?", catId).Find(&cat)
 	if result != nil {
 		return cat, nil
 	} else {
