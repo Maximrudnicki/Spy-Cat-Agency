@@ -12,9 +12,9 @@ import (
 // so should be able to add them to  and visualize in the system
 type CatRepository interface {
 	Save(cat models.Cat) error
-	Get(catId uint32) (models.Cat, error)
+	Get(catId int) (models.Cat, error)
 	Update(cat models.Cat) error
-	Delete(catId uint32) error
+	Delete(catId int) error
 	GetAll() ([]models.Cat, error)
 }
 
@@ -23,7 +23,7 @@ type CatRepositoryImpl struct {
 }
 
 // Delete implements CatRepository.
-func (c *CatRepositoryImpl) Delete(catId uint32) error {
+func (c *CatRepositoryImpl) Delete(catId int) error {
 	var cat models.Cat
 	result := c.Db.Where("cat_id = ?", catId).Delete(&cat)
 	if result.Error != nil {
@@ -34,7 +34,7 @@ func (c *CatRepositoryImpl) Delete(catId uint32) error {
 }
 
 // Get implements CatRepository.
-func (c *CatRepositoryImpl) Get(catId uint32) (models.Cat, error) {
+func (c *CatRepositoryImpl) Get(catId int) (models.Cat, error) {
 	var cat models.Cat
 	result := c.Db.Where("cat_id = ?", catId).Find(&cat)
 	if result != nil {

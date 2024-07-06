@@ -10,19 +10,19 @@ import (
 )
 
 type MissionService interface {
-	Create(cmr request.CreateMissionRequest) error
-	UpdateNameRequest(umr request.UpdateNameMissionRequest) error
-	Delete(missionId uint32) error
-	FindById(missionId uint32) (response.MissionResponse, error)
+	Create(req request.CreateMissionRequest) error
+	UpdateNameRequest(req request.UpdateNameMissionRequest) error
+	Delete(missionId int) error
+	FindById(missionId int) (response.MissionResponse, error)
 	FindAll() ([]response.MissionResponse, error)
-	FindMissionByCatId(catId uint32) ([]response.MissionResponse, error)
-	AssignCatToMission(catId uint32, missionId uint32) error
-	CompleteMission(missionId uint32) error
-	CompleteTarget(missionId uint32, targetId uint32) error
-	AddTarget(atr request.AddTargetRequest) error
-	RemoveTarget(targetId uint32, missionId uint32) error
-	UpdateNotes(unr request.UpdateNotesRequest) error
-	UpdateTarget(utr request.UpdateTargetRequest) error
+	FindMissionByCatId(catId int) ([]response.MissionResponse, error)
+	AssignCatToMission(catId int, missionId int) error
+	CompleteMission(missionId int) error
+	CompleteTarget(missionId int, targetId int) error
+	AddTarget(req request.AddTargetRequest) error
+	RemoveTarget(targetId int, missionId int) error
+	UpdateNotes(req request.UpdateNotesRequest) error
+	UpdateTarget(req request.UpdateTargetRequest) error
 }
 
 type MissionServiceImpl struct {
@@ -30,15 +30,15 @@ type MissionServiceImpl struct {
 }
 
 // AddTarget implements MissionService.
-func (m *MissionServiceImpl) AddTarget(atr request.AddTargetRequest) error {
+func (m *MissionServiceImpl) AddTarget(req request.AddTargetRequest) error {
 	newTarget := models.Target{
-		Name:      atr.Name,
-		Country:   atr.Country,
-		Notes:     atr.Notes,
-		MissionId: atr.MissionId,
+		Name:      req.Name,
+		Country:   req.Country,
+		Notes:     req.Notes,
+		MissionId: req.MissionId,
 	}
 
-	err := m.MissionRepository.AddTarget(newTarget, uint32(atr.MissionId))
+	err := m.MissionRepository.AddTarget(newTarget, int(req.MissionId))
 	if err != nil {
 		return err
 	}
@@ -47,7 +47,7 @@ func (m *MissionServiceImpl) AddTarget(atr request.AddTargetRequest) error {
 }
 
 // AssignCatToMission implements MissionService.
-func (m *MissionServiceImpl) AssignCatToMission(catId uint32, missionId uint32) error {
+func (m *MissionServiceImpl) AssignCatToMission(catId int, missionId int) error {
 	err := m.MissionRepository.AssignCatToMission(catId, missionId)
 	if err != nil {
 		return err
@@ -57,7 +57,7 @@ func (m *MissionServiceImpl) AssignCatToMission(catId uint32, missionId uint32) 
 }
 
 // CompleteMission implements MissionService.
-func (m *MissionServiceImpl) CompleteMission(missionId uint32) error {
+func (m *MissionServiceImpl) CompleteMission(missionId int) error {
 	err := m.MissionRepository.CompleteMission(missionId)
 	if err != nil {
 		return err
@@ -67,7 +67,7 @@ func (m *MissionServiceImpl) CompleteMission(missionId uint32) error {
 }
 
 // CompleteTarget implements MissionService.
-func (m *MissionServiceImpl) CompleteTarget(missionId uint32, targetId uint32) error {
+func (m *MissionServiceImpl) CompleteTarget(missionId int, targetId int) error {
 	err := m.MissionRepository.CompleteTarget(missionId, targetId)
 	if err != nil {
 		return err
@@ -77,9 +77,9 @@ func (m *MissionServiceImpl) CompleteTarget(missionId uint32, targetId uint32) e
 }
 
 // Create implements MissionService.
-func (m *MissionServiceImpl) Create(cmr request.CreateMissionRequest) error {
+func (m *MissionServiceImpl) Create(req request.CreateMissionRequest) error {
 	newMission := models.Mission{
-		Name: cmr.Name,
+		Name: req.Name,
 	}
 
 	err := m.MissionRepository.Save(newMission)
@@ -91,7 +91,7 @@ func (m *MissionServiceImpl) Create(cmr request.CreateMissionRequest) error {
 }
 
 // Delete implements MissionService.
-func (m *MissionServiceImpl) Delete(missionId uint32) error {
+func (m *MissionServiceImpl) Delete(missionId int) error {
 	err := m.MissionRepository.Delete(missionId)
 	if err != nil {
 		log.Printf("Service: cannot delete mission")
@@ -116,7 +116,7 @@ func (m *MissionServiceImpl) FindAll() ([]response.MissionResponse, error) {
 
 		for _, target := range mission.Targets {
 			targetResp := response.TargetResponse{
-				Id:          uint32(target.ID),
+				Id:          int(target.ID),
 				Name:        target.Name,
 				Country:     target.Country,
 				Notes:       target.Notes,
@@ -127,7 +127,7 @@ func (m *MissionServiceImpl) FindAll() ([]response.MissionResponse, error) {
 		}
 
 		mr := response.MissionResponse{
-			Id:          uint32(mission.ID),
+			Id:          int(mission.ID),
 			Name:        mission.Name,
 			CatId:       mission.CatId,
 			IsCompleted: mission.IsCompleted,
@@ -140,7 +140,7 @@ func (m *MissionServiceImpl) FindAll() ([]response.MissionResponse, error) {
 }
 
 // FindById implements MissionService.
-func (m *MissionServiceImpl) FindById(missionId uint32) (response.MissionResponse, error) {
+func (m *MissionServiceImpl) FindById(missionId int) (response.MissionResponse, error) {
 	result, err := m.MissionRepository.Get(missionId)
 	if err != nil {
 		log.Printf("Service: cannot find missions")
@@ -151,7 +151,7 @@ func (m *MissionServiceImpl) FindById(missionId uint32) (response.MissionRespons
 
 	for _, target := range result.Targets {
 		targetResp := response.TargetResponse{
-			Id:          uint32(target.ID),
+			Id:          int(target.ID),
 			Name:        target.Name,
 			Country:     target.Country,
 			Notes:       target.Notes,
@@ -161,18 +161,18 @@ func (m *MissionServiceImpl) FindById(missionId uint32) (response.MissionRespons
 	}
 
 	mr := response.MissionResponse{
-		Id:          uint32(result.ID),
+		Id:          int(result.ID),
 		Name:        result.Name,
 		CatId:       result.CatId,
 		IsCompleted: result.IsCompleted,
 		Targets:     targets,
 	}
-	
+
 	return mr, nil
 }
 
 // FindMissionByCatId implements MissionService.
-func (m *MissionServiceImpl) FindMissionByCatId(catId uint32) ([]response.MissionResponse, error) {
+func (m *MissionServiceImpl) FindMissionByCatId(catId int) ([]response.MissionResponse, error) {
 	result, err := m.MissionRepository.GetMissionByCatID(catId)
 	if err != nil {
 		log.Printf("Service: cannot find missions")
@@ -186,7 +186,7 @@ func (m *MissionServiceImpl) FindMissionByCatId(catId uint32) ([]response.Missio
 
 		for _, target := range mission.Targets {
 			targetResp := response.TargetResponse{
-				Id:          uint32(target.ID),
+				Id:          int(target.ID),
 				Name:        target.Name,
 				Country:     target.Country,
 				Notes:       target.Notes,
@@ -197,7 +197,7 @@ func (m *MissionServiceImpl) FindMissionByCatId(catId uint32) ([]response.Missio
 		}
 
 		mr := response.MissionResponse{
-			Id:          uint32(mission.ID),
+			Id:          int(mission.ID),
 			Name:        mission.Name,
 			CatId:       mission.CatId,
 			IsCompleted: mission.IsCompleted,
@@ -210,7 +210,7 @@ func (m *MissionServiceImpl) FindMissionByCatId(catId uint32) ([]response.Missio
 }
 
 // RemoveTarget implements MissionService.
-func (m *MissionServiceImpl) RemoveTarget(targetId uint32, missionId uint32) error {
+func (m *MissionServiceImpl) RemoveTarget(targetId int, missionId int) error {
 	err := m.MissionRepository.RemoveTarget(targetId, missionId)
 	if err != nil {
 		return err
@@ -220,9 +220,9 @@ func (m *MissionServiceImpl) RemoveTarget(targetId uint32, missionId uint32) err
 }
 
 // Update implements MissionService.
-func (m *MissionServiceImpl) UpdateNameRequest(umr request.UpdateNameMissionRequest) error {
+func (m *MissionServiceImpl) UpdateNameRequest(req request.UpdateNameMissionRequest) error {
 	updatedMission := models.Mission{
-		Name: umr.Name,
+		Name: req.Name,
 	}
 
 	err := m.MissionRepository.Update(updatedMission)
@@ -234,8 +234,8 @@ func (m *MissionServiceImpl) UpdateNameRequest(umr request.UpdateNameMissionRequ
 }
 
 // UpdateNotes implements MissionService.
-func (m *MissionServiceImpl) UpdateNotes(unr request.UpdateNotesRequest) error {
-	err := m.MissionRepository.UpdateNotes(unr.Id, unr.Notes, uint32(unr.MissionId))
+func (m *MissionServiceImpl) UpdateNotes(req request.UpdateNotesRequest) error {
+	err := m.MissionRepository.UpdateNotes(req.Id, req.Notes, int(req.MissionId))
 	if err != nil {
 		log.Printf("Service: cannot update mission")
 		return err
@@ -244,16 +244,16 @@ func (m *MissionServiceImpl) UpdateNotes(unr request.UpdateNotesRequest) error {
 }
 
 // UpdateTarget implements MissionService.
-func (m *MissionServiceImpl) UpdateTarget(utr request.UpdateTargetRequest) error {
+func (m *MissionServiceImpl) UpdateTarget(req request.UpdateTargetRequest) error {
 	updatedTarget := models.Target{
-		Name:        utr.Name,
-		Country:     utr.Country,
-		Notes:       utr.Notes,
-		IsCompleted: utr.IsCompleted,
-		MissionId:   utr.MissionId,
+		Name:        req.Name,
+		Country:     req.Country,
+		Notes:       req.Notes,
+		IsCompleted: req.IsCompleted,
+		MissionId:   req.MissionId,
 	}
 
-	err := m.MissionRepository.UpdateTarget(updatedTarget, utr.Id, uint32(utr.MissionId))
+	err := m.MissionRepository.UpdateTarget(updatedTarget, req.Id, int(req.MissionId))
 	if err != nil {
 		log.Printf("Service: cannot update mission")
 		return err

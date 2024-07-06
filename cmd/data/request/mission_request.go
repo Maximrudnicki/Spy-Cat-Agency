@@ -5,22 +5,22 @@ type CreateMissionRequest struct {
 }
 
 type UpdateNameMissionRequest struct {
-	Id   uint32 `json:"id"`
+	Id   int    `json:"id"`
 	Name string `json:"name"`
 }
 
 type AssignCatToMissionRequest struct {
-	MissionId uint32 `json:"mission_id"`
-	CatId     uint32 `json:"cat_id"`
+	MissionId int `json:"mission_id"`
+	CatId     int `json:"cat_id"`
 }
 
 type CompleteMissionRequest struct {
-	Id          uint32 `json:"id"`
-	IsCompleted bool   `json:"is_completed"`
+	Id          int  `json:"id"`
+	IsCompleted bool `json:"is_completed"`
 }
 
 type UpdateTargetRequest struct {
-	Id          uint32 `json:"id"`
+	Id          int    `json:"id"`
 	Name        string `json:"name"`
 	Country     string `json:"country"`
 	Notes       string `json:"notes"`
@@ -29,15 +29,15 @@ type UpdateTargetRequest struct {
 }
 
 type UpdateNotesRequest struct {
-	Id        uint32 `json:"id"`
+	Id        int    `json:"id"`
 	MissionId int    `json:"mission_id"`
 	Notes     string `json:"notes"`
 }
 
 type CompleteTargetRequest struct {
-	Id          uint32 `json:"id"`
-	MissionId   int    `json:"mission_id"`
-	IsCompleted bool   `json:"is_completed"`
+	Id          int  `json:"id"`
+	MissionId   int  `json:"mission_id"`
+	IsCompleted bool `json:"is_completed"`
 }
 
 type AddTargetRequest struct {
@@ -48,10 +48,10 @@ type AddTargetRequest struct {
 }
 
 type FindMissionByCatId struct {
-	CatId uint32 `json:"cat_id"`
+	CatId int `json:"cat_id"`
 }
 
 type RemoveTarget struct {
-	TargetId  uint32 `json:"target_id"`
-	MissionId int    `json:"mission_id"`
+	TargetId  int `json:"target_id"`
+	MissionId int `json:"mission_id"`
 }

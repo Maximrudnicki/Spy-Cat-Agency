@@ -12,10 +12,10 @@ import (
 )
 
 type CatService interface {
-	Create(ccr request.CreateCatRequest) error
-	Update(ucr request.UpdateCatRequest) error
-	Delete(catId uint32) error
-	FindById(catId uint32) (response.CatResponse, error)
+	Create(req request.CreateCatRequest) error
+	Update(req request.UpdateCatRequest) error
+	Delete(catId int) error
+	FindById(catId int) (response.CatResponse, error)
 	FindAll() ([]response.CatResponse, error)
 }
 
@@ -24,13 +24,13 @@ type CatServiceImpl struct {
 }
 
 // Create implements CatsService.
-func (c *CatServiceImpl) Create(ccr request.CreateCatRequest) error {
-	if u.ValidateBreed(ccr.Breed) {
+func (c *CatServiceImpl) Create(req request.CreateCatRequest) error {
+	if u.ValidateBreed(req.Breed) {
 		newCat := models.Cat{
-			Name:       ccr.Name,
-			Experience: ccr.Experience,
-			Breed:      ccr.Breed,
-			Salary:     ccr.Salary,
+			Name:       req.Name,
+			Experience: req.Experience,
+			Breed:      req.Breed,
+			Salary:     req.Salary,
 		}
 
 		err := c.CatRepository.Save(newCat)
@@ -46,7 +46,7 @@ func (c *CatServiceImpl) Create(ccr request.CreateCatRequest) error {
 }
 
 // Delete implements CatsService.
-func (c *CatServiceImpl) Delete(catId uint32) error {
+func (c *CatServiceImpl) Delete(catId int) error {
 	err := c.CatRepository.Delete(catId)
 	if err != nil {
 		log.Printf("Service: cannot delete cat")
@@ -80,7 +80,7 @@ func (c *CatServiceImpl) FindAll() ([]response.CatResponse, error) {
 }
 
 // FindById implements CatsService.
-func (c *CatServiceImpl) FindById(catId uint32) (response.CatResponse, error) {
+func (c *CatServiceImpl) FindById(catId int) (response.CatResponse, error) {
 	cat, err := c.CatRepository.Get(catId)
 	if err != nil {
 		log.Printf("Service: cannot find cat")
@@ -98,14 +98,14 @@ func (c *CatServiceImpl) FindById(catId uint32) (response.CatResponse, error) {
 }
 
 // Update implements CatsService.
-func (c *CatServiceImpl) Update(ucr request.UpdateCatRequest) error {
-	if u.ValidateBreed(ucr.Breed) {
+func (c *CatServiceImpl) Update(req request.UpdateCatRequest) error {
+	if u.ValidateBreed(req.Breed) {
 		updatedCat := models.Cat{
-			CatId:      ucr.Id,
-			Name:       ucr.Name,
-			Experience: ucr.Experience,
-			Breed:      ucr.Breed,
-			Salary:     ucr.Salary,
+			CatId:      req.Id,
+			Name:       req.Name,
+			Experience: req.Experience,
+			Breed:      req.Breed,
+			Salary:     req.Salary,
 		}
 
 		err := c.CatRepository.Update(updatedCat)

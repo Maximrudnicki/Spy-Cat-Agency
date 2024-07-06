@@ -11,9 +11,9 @@ If the target is complete, notes should be frozen, i.e. cats should not be able 
 After completing all of the targets, the mission is marked as completed.
 */
 type Mission struct {
-	ID          uint   `gorm:"type:int;primary_key"`
+	ID          int    `gorm:"type:int;primary_key"`
 	Name        string `gorm:"type:varchar;not null"`
-	CatId       uint32
+	CatId       int
 	IsCompleted bool     `gorm:"default:false"`
 	Targets     []Target `gorm:"constraint:OnDelete:CASCADE;"`
 }

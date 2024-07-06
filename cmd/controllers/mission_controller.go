@@ -20,8 +20,8 @@ func NewMissionController(service services.MissionService) *MissionController {
 }
 
 func (controller *MissionController) AddTarget(ctx *gin.Context) {
-	atr := request.AddTargetRequest{}
-	err := ctx.ShouldBindJSON(&atr)
+	req := request.AddTargetRequest{}
+	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -33,7 +33,7 @@ func (controller *MissionController) AddTarget(ctx *gin.Context) {
 		return
 	}
 
-	err = controller.missionService.AddTarget(atr)
+	err = controller.missionService.AddTarget(req)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -92,7 +92,7 @@ func (controller *MissionController) FindById(ctx *gin.Context) {
 		return
 	}
 
-	missionResponse, err := controller.missionService.FindById(uint32(id))
+	missionResponse, err := controller.missionService.FindById(id)
 	if err != nil || missionResponse.Id == 0 {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -115,8 +115,8 @@ func (controller *MissionController) FindById(ctx *gin.Context) {
 }
 
 func (controller *MissionController) Create(ctx *gin.Context) {
-	cmr := request.CreateMissionRequest{}
-	err := ctx.ShouldBindJSON(&cmr)
+	req := request.CreateMissionRequest{}
+	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -128,7 +128,7 @@ func (controller *MissionController) Create(ctx *gin.Context) {
 		return
 	}
 
-	err = controller.missionService.Create(cmr)
+	err = controller.missionService.Create(req)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -151,8 +151,8 @@ func (controller *MissionController) Create(ctx *gin.Context) {
 }
 
 func (controller *MissionController) UpdateNameRequest(ctx *gin.Context) {
-	umr := request.UpdateNameMissionRequest{}
-	err := ctx.ShouldBindJSON(&umr)
+	req := request.UpdateNameMissionRequest{}
+	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -164,7 +164,7 @@ func (controller *MissionController) UpdateNameRequest(ctx *gin.Context) {
 		return
 	}
 
-	err = controller.missionService.UpdateNameRequest(umr)
+	err = controller.missionService.UpdateNameRequest(req)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -187,8 +187,8 @@ func (controller *MissionController) UpdateNameRequest(ctx *gin.Context) {
 }
 
 func (controller *MissionController) UpdateNotes(ctx *gin.Context) {
-	umr := request.UpdateNotesRequest{}
-	err := ctx.ShouldBindJSON(&umr)
+	req := request.UpdateNotesRequest{}
+	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -200,7 +200,7 @@ func (controller *MissionController) UpdateNotes(ctx *gin.Context) {
 		return
 	}
 
-	err = controller.missionService.UpdateNotes(umr)
+	err = controller.missionService.UpdateNotes(req)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -223,8 +223,8 @@ func (controller *MissionController) UpdateNotes(ctx *gin.Context) {
 }
 
 func (controller *MissionController) UpdateTarget(ctx *gin.Context) {
-	utr := request.UpdateTargetRequest{}
-	err := ctx.ShouldBindJSON(&utr)
+	req := request.UpdateTargetRequest{}
+	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -236,7 +236,7 @@ func (controller *MissionController) UpdateTarget(ctx *gin.Context) {
 		return
 	}
 
-	err = controller.missionService.UpdateTarget(utr)
+	err = controller.missionService.UpdateTarget(req)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -272,7 +272,7 @@ func (controller *MissionController) Delete(ctx *gin.Context) {
 		return
 	}
 
-	err = controller.missionService.Delete(uint32(id))
+	err = controller.missionService.Delete(id)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -295,8 +295,8 @@ func (controller *MissionController) Delete(ctx *gin.Context) {
 }
 
 func (controller *MissionController) CompleteTarget(ctx *gin.Context) {
-	ctr := request.CompleteTargetRequest{}
-	err := ctx.ShouldBindJSON(&ctr)
+	req := request.CompleteTargetRequest{}
+	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -308,7 +308,7 @@ func (controller *MissionController) CompleteTarget(ctx *gin.Context) {
 		return
 	}
 
-	err = controller.missionService.CompleteTarget(uint32(ctr.MissionId), ctr.Id)
+	err = controller.missionService.CompleteTarget(req.MissionId, req.Id)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -331,8 +331,8 @@ func (controller *MissionController) CompleteTarget(ctx *gin.Context) {
 }
 
 func (controller *MissionController) CompleteMission(ctx *gin.Context) {
-	cmr := request.CompleteMissionRequest{}
-	err := ctx.ShouldBindJSON(&cmr)
+	req := request.CompleteMissionRequest{}
+	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -344,7 +344,7 @@ func (controller *MissionController) CompleteMission(ctx *gin.Context) {
 		return
 	}
 
-	err = controller.missionService.CompleteMission(uint32(cmr.Id))
+	err = controller.missionService.CompleteMission(req.Id)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -367,8 +367,8 @@ func (controller *MissionController) CompleteMission(ctx *gin.Context) {
 }
 
 func (controller *MissionController) AssignCatToMission(ctx *gin.Context) {
-	acmr := request.AssignCatToMissionRequest{}
-	err := ctx.ShouldBindJSON(&acmr)
+	req := request.AssignCatToMissionRequest{}
+	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -380,7 +380,7 @@ func (controller *MissionController) AssignCatToMission(ctx *gin.Context) {
 		return
 	}
 
-	err = controller.missionService.AssignCatToMission(acmr.CatId, acmr.MissionId)
+	err = controller.missionService.AssignCatToMission(req.CatId, req.MissionId)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -403,8 +403,8 @@ func (controller *MissionController) AssignCatToMission(ctx *gin.Context) {
 }
 
 func (controller *MissionController) RemoveTarget(ctx *gin.Context) {
-	rtr := request.RemoveTarget{}
-	err := ctx.ShouldBindJSON(&rtr)
+	req := request.RemoveTarget{}
+	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -416,7 +416,7 @@ func (controller *MissionController) RemoveTarget(ctx *gin.Context) {
 		return
 	}
 
-	err = controller.missionService.RemoveTarget(rtr.TargetId, uint32(rtr.MissionId))
+	err = controller.missionService.RemoveTarget(req.TargetId, req.MissionId)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -439,8 +439,8 @@ func (controller *MissionController) RemoveTarget(ctx *gin.Context) {
 }
 
 func (controller *MissionController) FindMissionByCatId(ctx *gin.Context) {
-	fmcr := request.FindMissionByCatId{}
-	err := ctx.ShouldBindJSON(&fmcr)
+	req := request.FindMissionByCatId{}
+	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -452,7 +452,7 @@ func (controller *MissionController) FindMissionByCatId(ctx *gin.Context) {
 		return
 	}
 
-	missions, err := controller.missionService.FindMissionByCatId(fmcr.CatId)
+	missions, err := controller.missionService.FindMissionByCatId(req.CatId)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,

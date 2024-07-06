@@ -10,21 +10,21 @@ import (
 
 type MissionRepository interface {
 	Save(mission models.Mission) error
-	Get(missionId uint32) (models.Mission, error)
+	Get(missionId int) (models.Mission, error)
 	Update(mission models.Mission) error
-	Delete(missionId uint32) error
+	Delete(missionId int) error
 	GetAll() ([]models.Mission, error)
-	GetMissionByCatID(catId uint32) ([]models.Mission, error)
-	AssignCatToMission(catId uint32, missionId uint32) error
-	CompleteMission(missionId uint32) error
+	GetMissionByCatID(catId int) ([]models.Mission, error)
+	AssignCatToMission(catId int, missionId int) error
+	CompleteMission(missionId int) error
 
-	CompleteTarget(missionId uint32, targetId uint32) error
-	AddTarget(target models.Target, missionId uint32) error
-	GetTargets(missionId uint32) ([]models.Target, error)
-	GetTarget(targetId uint32, missionId uint32) (models.Target, error)
-	RemoveTarget(targetId uint32, missionId uint32) error
-	UpdateNotes(targetId uint32, note string, missionId uint32) error
-	UpdateTarget(target models.Target, targetId uint32, missionId uint32) error
+	CompleteTarget(missionId int, targetId int) error
+	AddTarget(target models.Target, missionId int) error
+	GetTargets(missionId int) ([]models.Target, error)
+	GetTarget(targetId int, missionId int) (models.Target, error)
+	RemoveTarget(targetId int, missionId int) error
+	UpdateNotes(targetId int, note string, missionId int) error
+	UpdateTarget(target models.Target, targetId int, missionId int) error
 }
 
 type MissionRepositoryImpl struct {
@@ -32,7 +32,7 @@ type MissionRepositoryImpl struct {
 }
 
 // UpdateNotes implements MissionRepository.
-func (m *MissionRepositoryImpl) UpdateNotes(targetId uint32, note string, missionId uint32) error {
+func (m *MissionRepositoryImpl) UpdateNotes(targetId int, note string, missionId int) error {
 	var tar models.Target
 	tar, err := m.GetTarget(targetId, missionId)
 	if err != nil {
@@ -40,19 +40,19 @@ func (m *MissionRepositoryImpl) UpdateNotes(targetId uint32, note string, missio
 		return errors.New("cannot complete target")
 	}
 
-	if !tar.IsCompleted{
+	if !tar.IsCompleted {
 		target := models.Target{
-			ID:          uint(targetId),
-			MissionId:   int(missionId),
-			Notes: note,
+			ID:        targetId,
+			MissionId: missionId,
+			Notes:     note,
 		}
-	
+
 		result := m.Db.Model(&target).Update("notes", note)
 		if result.Error != nil {
 			log.Printf("Repo: cannot complete target")
 			return errors.New("cannot complete target")
 		}
-	
+
 		return nil
 	} else {
 		log.Printf("Repo: cannot complete target")
@@ -61,7 +61,7 @@ func (m *MissionRepositoryImpl) UpdateNotes(targetId uint32, note string, missio
 }
 
 // UpdateTarget implements MissionRepository.
-func (m *MissionRepositoryImpl) UpdateTarget(target models.Target, targetId uint32, missionId uint32) error {
+func (m *MissionRepositoryImpl) UpdateTarget(target models.Target, targetId int, missionId int) error {
 	var mission models.Mission
 	result := m.Db.Where("id = ?", missionId).Find(&mission)
 	if result.Error != nil {
@@ -73,7 +73,7 @@ func (m *MissionRepositoryImpl) UpdateTarget(target models.Target, targetId uint
 	mission.Targets = tars
 
 	for _, t := range mission.Targets {
-		if t.ID == uint(targetId) {
+		if t.ID == targetId {
 			t = target
 		}
 	}
@@ -88,7 +88,7 @@ func (m *MissionRepositoryImpl) UpdateTarget(target models.Target, targetId uint
 }
 
 // RemoveTarget implements MissionRepository.
-func (m *MissionRepositoryImpl) RemoveTarget(targetId uint32, missionId uint32) error {
+func (m *MissionRepositoryImpl) RemoveTarget(targetId int, missionId int) error {
 	var target models.Target
 	result := m.Db.Where("mission_id = ? AND id = ?", missionId, targetId).Delete(&target)
 
@@ -100,7 +100,7 @@ func (m *MissionRepositoryImpl) RemoveTarget(targetId uint32, missionId uint32) 
 }
 
 // AddTarget implements MissionRepository.
-func (m *MissionRepositoryImpl) AddTarget(target models.Target, missionId uint32) error {
+func (m *MissionRepositoryImpl) AddTarget(target models.Target, missionId int) error {
 	var mission models.Mission
 	result := m.Db.Where("id = ?", missionId).Find(&mission)
 	if result.Error != nil {
@@ -130,7 +130,7 @@ func (m *MissionRepositoryImpl) AddTarget(target models.Target, missionId uint32
 }
 
 // CompleteTarget implements MissionRepository.
-func (m *MissionRepositoryImpl) CompleteTarget(missionId uint32, targetId uint32) error {
+func (m *MissionRepositoryImpl) CompleteTarget(missionId int, targetId int) error {
 	var mission models.Mission
 	result := m.Db.Where("id = ?", missionId).Find(&mission)
 	if result.Error != nil {
@@ -148,7 +148,7 @@ func (m *MissionRepositoryImpl) CompleteTarget(missionId uint32, targetId uint32
 			counter++
 		}
 
-		if target.ID == uint(targetId) {
+		if target.ID == targetId {
 			target.IsCompleted = true
 		}
 	}
@@ -165,8 +165,8 @@ func (m *MissionRepositoryImpl) CompleteTarget(missionId uint32, targetId uint32
 	}
 
 	target := models.Target{
-		ID:          uint(targetId),
-		MissionId:   int(missionId),
+		ID:          targetId,
+		MissionId:   missionId,
 		IsCompleted: true,
 	}
 
@@ -180,7 +180,7 @@ func (m *MissionRepositoryImpl) CompleteTarget(missionId uint32, targetId uint32
 }
 
 // AssignCatToMission implements MissionRepository.
-func (m *MissionRepositoryImpl) AssignCatToMission(catId uint32, missionId uint32) error {
+func (m *MissionRepositoryImpl) AssignCatToMission(catId int, missionId int) error {
 	var mission models.Mission
 	result := m.Db.Where("id = ?", missionId).Find(&mission)
 	if result.Error != nil {
@@ -200,7 +200,7 @@ func (m *MissionRepositoryImpl) AssignCatToMission(catId uint32, missionId uint3
 }
 
 // CompleteMission implements MissionRepository.
-func (m *MissionRepositoryImpl) CompleteMission(missionId uint32) error {
+func (m *MissionRepositoryImpl) CompleteMission(missionId int) error {
 	var mission models.Mission
 	result := m.Db.Where("id = ?", missionId).Find(&mission)
 	if result.Error != nil {
@@ -227,7 +227,7 @@ func (m *MissionRepositoryImpl) CompleteMission(missionId uint32) error {
 }
 
 // Delete implements MissionRepository.
-func (m *MissionRepositoryImpl) Delete(missionId uint32) error {
+func (m *MissionRepositoryImpl) Delete(missionId int) error {
 	var mission models.Mission
 	result := m.Db.Where("id = ?", missionId).Delete(&mission)
 	if result.Error != nil {
@@ -238,7 +238,7 @@ func (m *MissionRepositoryImpl) Delete(missionId uint32) error {
 }
 
 // Get implements MissionRepository.
-func (m *MissionRepositoryImpl) Get(missionId uint32) (models.Mission, error) {
+func (m *MissionRepositoryImpl) Get(missionId int) (models.Mission, error) {
 	var mission models.Mission
 	result := m.Db.Where("id = ?", missionId).Find(&mission)
 
@@ -258,7 +258,7 @@ func (m *MissionRepositoryImpl) Get(missionId uint32) (models.Mission, error) {
 }
 
 // GetTarget implements MissionRepository.
-func (m *MissionRepositoryImpl) GetTargets(missionId uint32) ([]models.Target, error) {
+func (m *MissionRepositoryImpl) GetTargets(missionId int) ([]models.Target, error) {
 	var targets []models.Target
 	result := m.Db.Where("mission_id = ?", missionId).Find(&targets)
 
@@ -271,7 +271,7 @@ func (m *MissionRepositoryImpl) GetTargets(missionId uint32) ([]models.Target, e
 }
 
 // GetTarget implements MissionRepository.
-func (m *MissionRepositoryImpl) GetTarget(targetId uint32, missionId uint32) (models.Target, error) {
+func (m *MissionRepositoryImpl) GetTarget(targetId int, missionId int) (models.Target, error) {
 	var target models.Target
 	result := m.Db.Where("mission_id = ? AND id = ?", missionId, targetId).Find(&target)
 
@@ -289,7 +289,7 @@ func (m *MissionRepositoryImpl) GetAll() ([]models.Mission, error) {
 	result := m.Db.Find(&missions)
 
 	for i := range missions {
-		targets, err := m.GetTargets(uint32(missions[i].ID))
+		targets, err := m.GetTargets(int(missions[i].ID))
 		if err != nil {
 			return missions, nil
 		}
@@ -305,12 +305,12 @@ func (m *MissionRepositoryImpl) GetAll() ([]models.Mission, error) {
 }
 
 // GetMissionByCatID implements MissionRepository.
-func (m *MissionRepositoryImpl) GetMissionByCatID(catId uint32) ([]models.Mission, error) {
+func (m *MissionRepositoryImpl) GetMissionByCatID(catId int) ([]models.Mission, error) {
 	var missions []models.Mission
 	result := m.Db.Where("cat_id = ?", catId).Find(&missions)
 
 	for i := range missions {
-		targets, err := m.GetTargets(uint32(missions[i].ID))
+		targets, err := m.GetTargets(int(missions[i].ID))
 		if err != nil {
 			return missions, nil
 		}
@@ -338,8 +338,7 @@ func (m *MissionRepositoryImpl) Save(mission models.Mission) error {
 // Update implements MissionRepository.
 func (m *MissionRepositoryImpl) Update(mission models.Mission) error {
 	var updatedMission = &models.Mission{
-		CatId: mission.CatId,
-		// Targets:     mission.Targets,
+		CatId:       mission.CatId,
 		IsCompleted: mission.IsCompleted,
 	}
 

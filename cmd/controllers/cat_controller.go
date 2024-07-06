@@ -56,7 +56,7 @@ func (controller *CatController) FindById(ctx *gin.Context) {
 		return
 	}
 
-	catResponse, err := controller.catService.FindById(uint32(id))
+	catResponse, err := controller.catService.FindById(id)
 	if err != nil || catResponse.Id == 0 {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -79,8 +79,8 @@ func (controller *CatController) FindById(ctx *gin.Context) {
 }
 
 func (controller *CatController) Create(ctx *gin.Context) {
-	ccr := request.CreateCatRequest{}
-	err := ctx.ShouldBindJSON(&ccr)
+	req := request.CreateCatRequest{}
+	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -92,7 +92,7 @@ func (controller *CatController) Create(ctx *gin.Context) {
 		return
 	}
 
-	err = controller.catService.Create(ccr)
+	err = controller.catService.Create(req)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -128,8 +128,8 @@ func (controller *CatController) Update(ctx *gin.Context) {
 		return
 	}
 
-	ucr := request.UpdateCatRequest{Id: uint32(id)}
-	err = ctx.ShouldBindJSON(&ucr)
+	req := request.UpdateCatRequest{Id: id}
+	err = ctx.ShouldBindJSON(&req)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -141,7 +141,7 @@ func (controller *CatController) Update(ctx *gin.Context) {
 		return
 	}
 
-	err = controller.catService.Update(ucr)
+	err = controller.catService.Update(req)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
@@ -177,7 +177,7 @@ func (controller *CatController) Delete(ctx *gin.Context) {
 		return
 	}
 
-	err = controller.catService.Delete(uint32(id))
+	err = controller.catService.Delete(id)
 	if err != nil {
 		webResponse := response.Response{
 			Code:    http.StatusBadRequest,
