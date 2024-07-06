@@ -7,7 +7,7 @@
 ##### In order to start the app you need to enter the following command: cd Spy-Cat-Agency 
 ##### And then this one: docker-compose up -d
 
-##### Once containers are up, just visit localhos:8000 or check the postman here: https://www.postman.com/navigation-engineer-62741940/workspace/rudnytskyi-test/collection/25383927-2ea6fdcf-a203-4ca9-b2c9-f09eb1bbb83b?action=share&creator=25383927
+##### Once containers are up, just visit localhost:8000 or check the postman here: https://www.postman.com/navigation-engineer-62741940/workspace/rudnytskyi-test/collection/25383927-2ea6fdcf-a203-4ca9-b2c9-f09eb1bbb83b?action=share&creator=25383927
 
 ##### Also, if the app is not started or simply doesn't work, just try to start it again using docker desktop. The issue can appear in case the app starts before the database. Once the DB is up you can start container with the app itself
 
